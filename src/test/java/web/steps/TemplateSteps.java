@@ -1,12 +1,10 @@
 package web.steps;
 
 import com.codeborne.selenide.Selenide;
-import io.cucumber.java.ru.И;
 import io.cucumber.java.ru.Когда;
 import io.cucumber.java.ru.Пусть;
 import io.cucumber.java.ru.Тогда;
 import org.junit.jupiter.api.Assertions;
-import web.data.DataHelper;
 import web.page.DashboardPage;
 import web.page.LoginPage;
 import web.page.TopUpPage;
@@ -34,22 +32,20 @@ public class TemplateSteps {
 
     }
 
-    @Когда("пользователь выбирает первую карту для пополнения")
-    public void clickTopUpCard() {
-        topUpPage = dashboardPage.topUpCard1();
+    @Когда("пользователь выбирает {int} карту для пополнения")
+    public void clickTopUpCard(int id) {
+        topUpPage = dashboardPage.topUpCard(id);
     }
 
-    @Когда("пользователь указывает {string} рублей и счет списания")
-    public void clickTopUpCard(String sum) {
-        int amount = Integer.parseInt(sum.trim());
-        topUpPage.topUpCard(String.valueOf(amount), DataHelper.getCardNumber().getCard2());
+    @Когда("пользователь указывает {int} рублей и счет списания {string}")
+    public void clickTopUpCard(int sum, String numberCard) {
+        topUpPage.topUpCard(String.valueOf(sum), numberCard);
         dashboardPage.updateButton();
 
     }
 
-    @Тогда("баланс его первой карты из списка на главной странице должен стать {string} рублей")
-    public void verifyDashboardPage(String sum) {
-        int balance = Integer.parseInt(sum.trim());
-        Assertions.assertEquals(dashboardPage.getCard1Balance(), balance);
+    @Тогда("баланс его {int} карты из списка на главной странице должен стать {int} рублей")
+    public void verifyDashboardPage(int id, int sum) {
+        Assertions.assertEquals(dashboardPage.getCardBalance(id), sum);
     }
 }
